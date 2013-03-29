@@ -1,22 +1,11 @@
 import java.awt.Color;
-import java.awt.Frame;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
 
+import java.util.HashMap;
 import processing.core.PApplet;
-import sojamo.drop.SDrop;
 import controlP5.*;
 
-public class GUIController extends ControlP5Util implements Controller  {
+public class GUIController extends ControlP5Util  {
 
-	private Application app;
-
-	private boolean visible = Config.GUI_VISIBLE;
-	private volatile boolean ready = false;
-
-	private int windowH = 580;
-	private int windowW = 820;
 	private int dspW = 600;
 	private int bandWidth = 0;
 
@@ -25,188 +14,18 @@ public class GUIController extends ControlP5Util implements Controller  {
 	public HashMap<Integer,Float> groupBeatSenses = new HashMap<Integer,Float>();
 	private String currentController=null;
 
-	private SDrop drop;  
-
-	private int lastGuiUpdate = 0;
-	private int refresh = 100;//milliseconds between gui refresh
-
-	private ControlFrame controlFrame;
-	int lastGuiDraw=0;
-
 	public GUIController(Application app,boolean window,boolean visible){
-		toggleActiveColor=app.color(40,240,40);
-		selectorActiveColor=app.color(240,40,40);
-		System.out.println("GUI Controller.");
-		this.app=app;
-		
-		if(this.app!=null){
-			
-			if(Config.GUI_WINDOW){
-				controlFrame = new ControlFrame(this.app,"patterns controller",this.windowH,this.windowW);
-				if(app.presetManager!=null || "".equals(drop)){
-					drop = new SDrop(controlFrame, app);	
-				}
-				controlFrame.addMouseListener(new MyMouseListener() );
-				controlFrame.addKeyListener(this.app);
-				while(controlFrame.cp5==null){
-					try {Thread.sleep(50);} catch (Exception e) {}
-				}
-				this.controlP5 = controlFrame.cp5;
-			}else{
-				this.controlP5 = new ControlP5(app);
-				app.frame.addMouseListener(new MyMouseListener());
-			}
-			this.hide();
-			//this.controlP5.setFont(this.app.createFont("", 8));
-			this.controlP5.setMoveable(false);
-			this.controlP5.disableShortcuts();
-
-			setup();
-
-			if(Config.GUI_VISIBLE){
-				this.show();
-			}else{
-				this.hide();
-			}
-			
-			this.ready=true;	
-		}
-
+		super(app, window, visible);
 	}
-
-	public void hide(){
-		if(controlFrame!=null){
-			this.controlFrame.setVisible(false);
-		}
-		this.controlP5.hide();
-		visible=false;
-	}
-	public void show(){
-		if(controlFrame!=null){
-			this.controlFrame.setVisible(true);
-		}
-		this.controlP5.show();
-		visible=true;
-	}
-	public boolean isVisible(){
-		return(this.visible);
-	}
-	public void toggleVisiblity(){
-		if(visible){
-			hide();
-		}else{
-			show();
-		}
-	}
-	
-	class MyMouseListener implements MouseListener{
-		public void mouseClicked(MouseEvent e) {
-			mouseClick(e.getX(),e.getY(),e.getButton());
-		}
-		public void mousePressed(MouseEvent e) {
-			mousePress(e.getX(),e.getY(),e.getButton());
-		}
-		public void mouseReleased(MouseEvent e) {
-			mouseRelease(e.getX(),e.getY(),e.getButton());
-		}
-		public void mouseEntered(MouseEvent e) {}
-		public void mouseExited(MouseEvent e) {}
-	}
-
-
-
-	/*private void makeWindow(){
-		if(app!=null){
-			this.controlWindow = controlP5.addControlWindow(this.windowName,100,100,this.windowW,this.windowH);
-			controlWindow.component().addMouseListener(new MyMouseListener() );	
-			// for continuous update use ControlWindow.NORMAL  to update a control
-			// window only when it is in focus, use ControlWindow.ECONOMIC
-			// economic is the default update value.
-			controlWindow.setUpdateMode(ControlWindow.NORMAL);
-			// create a control window canvas and add it to
-			// the control window from above.  
-			PatternControlWindowCanvas canvas = new PatternControlWindowCanvas();
-			//canvas.pre(); // use cc.post(); to draw on top of the controllers.
-			controlWindow.addCanvas(canvas);
-			if(app.presetManager!=null || "".equals(drop)){
-				drop = new SDrop(controlWindow.component(),app);	
-			}
-
-		}
-	}*/
-
-
-	public class ControlFrame extends PApplet {
-		private static final long serialVersionUID = -8996418478036660977L;
-		volatile ControlP5 cp5;
-		Object parent;
-		int w, h;
-		Frame f;
-		ControlFrame(Object theParent,String name,int h, int w) {
-			f = new Frame(name);
-			this.h=h;
-			this.w=w;
-			f.add(this);
-			this.init();
-			f.setTitle(name);
-			f.setSize(this.w, this.h);
-			f.setLocation(120, 120);
-			f.setResizable(false);
-			f.setVisible(true);
-			f.setVisible(false);
-		}
-		public void keyPressed(){
-			if(key==27){
-				key=0;
-			}
-		}
-		public void setup() {
-			size(w, h);
-			frameRate(25);
-			cp5 = new ControlP5(this);
-		}
-		public void draw() {
-			background(0,0,0);
-			if(ready){
-				draw2(this);
-			}
-		}
-		public void setVisible(boolean visible){
-			f.setVisible(visible);
-			super.setVisible(visible);
-		}
-		public void controlEvent(ControlEvent theEvent) {
-			controlEvent2(theEvent);
-		}
-	}
-
-
-	public void control(){}
 
 	private void computeBanWidth(){
 		this.bandWidth = (dspW-app.soundController.zoneEnabled().length+1)/app.soundController.zoneEnabled().length;
 	}
 
-
-	/**
-	 * switch between gui tabs
-	 */
-	public void switchTab(){
-		ControllerList tabs = controlP5.controlWindow.getTabs();
-		String currentTabName=controlP5.controlWindow.getCurrentTab().getName();
-		for(int i=0;i<tabs.size();i++){
-			if(tabs.get(i).getName().equals(currentTabName)){
-				if(i==tabs.size()-1){
-					controlP5.controlWindow.activateTab(tabs.get(1).getName());
-				}else{
-					controlP5.controlWindow.activateTab(tabs.get(i+1).getName());	
-				}
-			}
-		}
-	}
-
-	public void draw2(PApplet theApplet) {
+	public void drawCustomUI(PApplet theApplet) {
 		if(this.isVisible()){
+			
+			//draw sound groups
 			for(Integer group : onBeat.keySet()){
 				if(onBeat.get(group)!=null){
 					int numGroup=onBeat.keySet().size();
@@ -221,6 +40,7 @@ public class GUIController extends ControlP5Util implements Controller  {
 					}
 				}
 			}
+			
 			//paint DSP data
 			if(app.soundController!=null){
 				app.soundController.draw(theApplet);
@@ -233,17 +53,9 @@ public class GUIController extends ControlP5Util implements Controller  {
 	 */
 	public void setup(){
 
-		
-		String[] layerNames=new String[app.layers.length];
-		int[] layerNumbers=new int[app.layers.length];
-		for(int i=0;i<app.layers.length;i++){
-			layerNames[i]="";
-			layerNumbers[i]=(i);
-		}
-
-		for(Integer group : this.onBeat.keySet()){
+		/*for(Integer group : this.onBeat.keySet()){
 			this.onBeat.put(group, false);
-		}
+		}*/
 		
 		
 		//CREATE TABS
@@ -279,7 +91,8 @@ public class GUIController extends ControlP5Util implements Controller  {
 		addSlider(null,"frames"     ,0,0,80,x,y,60,h,globalTab,null).setCaptionLabel("FPS");
 		x+=60+30+wMargin;
 		addSlider(null,"refresh"     ,10,0,500,x,y,60,h,globalTab,null).setCaptionLabel("Gui(ms)");
-		
+		x+=90+wMargin; 
+		addToggle(null,"LP",true,10,300,h,h,globalTab,null);
 		
 		
 		//Layers
@@ -293,6 +106,13 @@ public class GUIController extends ControlP5Util implements Controller  {
 			addButton(null,"layer"+(i)+"fgDsp", x+wMargin*4+h+3,y+i*(h+hMargin),h*2,h,globalTab,null).setCaptionLabel((1+i)+"");
 		}    
 		x=h+2*wMargin+1;  
+		//layers
+		String[] layerNames = new String[app.layers.length];
+		int[] layerNumbers = new int[app.layers.length];
+		for(int i=0;i<app.layers.length;i++){
+			layerNames[i]="";
+			layerNumbers[i]=(i);
+		}
 		addRadio(null,"Layer Selected",layerNames,x,y,null,null,globalTab,null).setLabel("");
 		y=34;x=60;
 		addRadio(null,"ghostLayer.v",new String[]{"","","","","","","","","","","","","","","",""},x,y,null,null,globalTab,null); 
@@ -460,9 +280,6 @@ public class GUIController extends ControlP5Util implements Controller  {
 
 
 	public void controlEvent(ControlEvent theEvent) {
-		controlEvent2(theEvent);
-	}
-	public void controlEvent2(ControlEvent theEvent) {
 		try{
 			if(ready){
 				//check if interface setup is complete and parameters updated before treating messages
@@ -554,13 +371,20 @@ public class GUIController extends ControlP5Util implements Controller  {
 		if(name.equals("Frame")){
 			this.app.saveFrame=true;
 		}
+		if(app.midiLaunchpadController!=null){
+			if(name.equals("LP")  ) app.midiLaunchpadController.enabled=!app.midiLaunchpadController.enabled;
+		}
 		
 		//if(name.equals("Send") && pat!=null&&app.oscController!=null) app.oscController.broadcastLoadPatternInLayer(pat,app.currentLayer);
 		if(name.equals("Save")) app.presetManager.asyncFileOperation("save");
 		if(name.equals("Save All")) app.presetManager.asyncFileOperation("SaveAll");
 		if(name.equals("relocate")) {
-			app.frame.setLocation(Config.X, Config.Y);
-			/*if(app.previewWindow!=null){
+			otherPosition=!otherPosition;
+			if(otherPosition){
+				app.frame.setLocation(x, y);
+			}else{
+				app.frame.setLocation(Config.X, Config.Y);
+			}/*if(app.previewWindow!=null){
 				app.previewWindow.setLocation(50, 50);
 				app.previewWindow.getFrame().setSize(Config.WIDTH/4,Config.HEIGHT/4+20);
 			}*/
@@ -572,7 +396,10 @@ public class GUIController extends ControlP5Util implements Controller  {
 			if(name.equals("bump-"))app.globalController.decBump();
 		}
 	}
-
+	int x=0;
+	int y=0;
+	boolean otherPosition=false;
+	
 
 	public void currentLayerChanged(){
 		Layer layer = app.layers[app.currentLayer];
@@ -594,23 +421,12 @@ public class GUIController extends ControlP5Util implements Controller  {
 		}
 	}
 
-	public void autoSelectTab(){
-		Layer layer = app.layers[app.currentLayer];
-			if(layer!=null){
-			ControllerList tabs = controlP5.controlWindow.getTabs();
-			String layerType = layer.getType();
-			for(int i=0;i<tabs.size();i++){
-				if(tabs.get(i).getName().equals(layerType)){
-					controlP5.controlWindow.activateTab(tabs.get(i).getName());	
-				}
-			}
-		}
-	}
+
 
 	public void update(){
 
 		if(!Config.GUI_WINDOW){
-			this.draw2(this.app);
+			this.drawCustomUI(this.app);
 		}
 		
 		if(app.millis() - lastGuiUpdate > refresh && this.ready){
@@ -694,7 +510,9 @@ public class GUIController extends ControlP5Util implements Controller  {
 					//updateController(null,"autoBeatSense",0);
 					updateController(null,"currentController","");
 				}
-				
+				if(app.midiLaunchpadController!=null){
+					updateController(null,"LP",app.midiLaunchpadController.enabled?1:0);
+				}
 	
 				//FPS
 				updateController(null,"frames", app.frameRate);
@@ -747,6 +565,7 @@ public class GUIController extends ControlP5Util implements Controller  {
 			}
 		}
 	}
+	
 	void controlParam(FloatParameter param,String layerType,String name,float value){
 		if(app.layers[app.currentLayer]!=null){
 			if(name.endsWith(".v")) param.setV(value);
@@ -843,28 +662,6 @@ public class GUIController extends ControlP5Util implements Controller  {
 		updateController(layerType,name+".ghostMode",  param.ghostValue==-1?1:0);
 	}
 
-	/*private void updateParam(String layerType, String name){
-		updateController(layerType,name+".v",0);
-		updateController(layerType,name+".sc",0);
-		updateController(layerType,name+".scChange",0);
-		updateController(layerType,name+".scAccumulatorInc",0);
-		updateController(layerType,name+".tc",0);
-		updateController(layerType,name+".tcIncPerSec",0);
-		updateController(layerType,name+".bump",0);
-		updateController(layerType,name+".bumpAccumulatorInc",0);
-		updateController(layerType,name+".bumpChange",0);
-		updateController(layerType,name+".bumpAttack",0);
-		updateController(layerType,name+".bumpFade",0);
-		updateController(layerType,name+".scAlter",0);
-		updateController(layerType,name+".scAlterAccumulatorInc",0);
-		updateController(layerType,name+".modulate",0);
-		updateController(layerType,name+".modulatePct",0);
-		updateController(layerType,name+".max",0);
-		updateController(layerType,name+".min",0);
-		updateController(layerType,name+".ghost",0);
-		updateController(layerType,name+".ghostFull",0);
-		updateController(layerType,name+".ghostMode",0);
-	}*/
 	
 	private void updateParam(String layerType,ListParameter param){
 		String name = param.getName();
