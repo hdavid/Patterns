@@ -1,0 +1,24 @@
+fix Scrolling !
+
+
+Xclean parameter for incremental :
+	Xadd limit
+	Xadd wrap
+
+-improve incremental modes
+	-start end ?
+	-curve ?
+	
+-improve beat sync
+	-phase
+	-divider multiplier
+	
+-interface cleanup
+	-larger
+	-more names
+	-tool tips ?
+	-cleanup code and positioning
+	
+slave layer =
+	-add a param slavelayer
+	-in param add master value + slave

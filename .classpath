@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="data/|Presets/" kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/processing-trunk"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/rwmidi"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Syphon"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/oscP5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/sDrop"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dmxP512"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/toxiclibs-core"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/controlP5"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

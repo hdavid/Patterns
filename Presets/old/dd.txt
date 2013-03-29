@@ -1,0 +1,21 @@
+shapeCenter:0;false;false;0
+shapeSide:9;false;false;0
+shapeCorner:3;true;false;0
+shapeCenterAngle:270;true;false;0
+shapeSideAngle:180;true;false;0
+shapeCornerAngle:270;true;false;0
+fgH:0.7128086;true;0.87;false;317.0;false;0.5;50.0;200.0;0.0;false
+fgS:1.0;false;5.89;false;500.0;false;0.5;50.0;200.0;0.0;false
+fgB:1.0;false;3.6;false;500.0;false;0.5;50.0;200.0;0.0;false
+fgAlpha:1.0;false;0.5;false;500.0;false;0.5;50.0;200.0;0.0;false
+bgH:0.8370474;true;1.1;false;500.0;false;0.5;50.0;200.0;0.0;false
+bgS:1.0;false;4.59;false;500.0;false;0.5;50.0;200.0;0.0;false
+bgB:0.0;false;5.68;false;500.0;true;1.48;0.0;478.0;0.0;false
+bgAlpha:1.0;false;0.5;false;500.0;false;0.5;50.0;200.0;0.0;false
+gradient:0.0;false;0.5;false;0.0;false;0.5;50.0;200.0;0.0;false
+angle:2.5588813;false;0.5;false;0.20000005;false;0.5;50.0;200.0;0.0;true
+zoom:3.4566433;false;0.5;false;-0.9000001;false;0.5;50.0;200.0;0.0;true
+scrollX:9.483099;false;0.1;true;8.0;false;0.5;50.0;200.0;0.0;true
+scrollY:4.053659;false;0.1;true;11.0;false;0.5;50.0;200.0;0.0;true
+text:::my text !
+drawText:false
