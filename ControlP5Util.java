@@ -36,6 +36,7 @@ public abstract class ControlP5Util implements Controller  {
 	protected boolean ready = false;
 	protected int wMargin = 4;
 	protected int hMargin = wMargin;
+	protected int wNum = 23;
 	protected int toggleActiveColor=-1;
 	protected int selectorActiveColor=-1;
 	protected boolean visible = true;
@@ -50,18 +51,18 @@ public abstract class ControlP5Util implements Controller  {
 	
 	protected List<Textfield> textFields = new ArrayList<Textfield>();
 	
-	public int w = 100;
-	public int h = 10;
+	protected int w = 100;
+	protected int h = 10;
 	
 	public abstract void update();
 	public abstract void setup();
-	
 	public abstract void mousePress(int x,int y, int buttons);
 	public abstract void mouseClick(int x,int y, int buttons);
 	public abstract void mouseRelease(int x,int y, int buttons);
 	public abstract void drawCustomUI(PApplet theApplet);
 	public abstract void controlEvent(ControlEvent theEvent);
 	
+	@SuppressWarnings("deprecation")
 	public ControlP5Util(Application app,boolean window,boolean visible){
 		toggleActiveColor=app.color(40,240,40);
 		selectorActiveColor=app.color(240,40,40);
@@ -88,9 +89,9 @@ public abstract class ControlP5Util implements Controller  {
 			//this.controlP5.setFont(this.app.createFont("", 8));
 			this.controlP5.setMoveable(false);
 			this.controlP5.disableShortcuts();
-			
+			this.controlP5.blockDraw = true;
 			setup();
-
+			this.controlP5.blockDraw = false;
 			if(Config.GUI_VISIBLE){
 				this.show();
 			}else{

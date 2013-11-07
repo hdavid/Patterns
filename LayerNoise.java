@@ -11,6 +11,8 @@ import controlP5.Tab;
 
 import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
+import toxi.math.noise.PerlinNoise;
+import toxi.math.noise.SimplexNoise;
 
 public class LayerNoise extends LayerColor {
 
@@ -41,6 +43,8 @@ public class LayerNoise extends LayerColor {
 	public ListParameter  incNoiseY  = new ListParameter(this,0,ListParameter.onOff,ListParameter.onOffNames,"incNoiseY");
 	public ListParameter  incNoiseC  = new ListParameter(this,0,ListParameter.onOff,ListParameter.onOffNames,"incNoiseC");
 	
+	public ListParameter  noiseMode  = new ListParameter(this,0,new int[]{0,1,2},new String[]{"rand","perlin","simplex"},"noiseMode");
+	
 	public ListParameter continous  = new ListParameter(this,0,ListParameter.onOff,ListParameter.onOffNames,"continous");
 
 	long lastCol=0;
@@ -52,7 +56,48 @@ public class LayerNoise extends LayerColor {
 		super(parent);
 		setParameterMap();
 	}
+	
 
+	private static final PerlinNoise perlinNoise = new PerlinNoise();
+	
+	/*private double noise(double min, double max, double x){
+		double value = 0;
+		if(this.noiseMode.v()==1){
+			value = perlinNoise.noise((float)x) * (max-min)-min;
+		}else if(this.noiseMode.v()==2){
+			value =  SimplexNoise.noise(x, 0) * (max-min)-min;
+		}else{
+			value =  parent.random((float)min,(float)max);
+		}
+		//System.out.println(value);
+		return(value);
+	}*/
+	
+	private double noise(double min, double max, double x, double y){
+		double value = 0;
+		if(this.noiseMode.v()==1){
+			value = perlinNoise.noise((float)x,(float) y) * (max-min)+min;
+		}else if(this.noiseMode.v()==2){
+			value = SimplexNoise.noise(x, y)* (max-min)+min;
+		}else{
+			value = parent.random((float)min,(float)max);
+		}
+		//System.out.println(value);
+		return(value);
+	}
+	
+	/*private double noise(double min, double max, double x, double y, double z){
+		if(this.noiseMode.v()==1){
+			return perlinNoise.noise((float)x,(float)y,(float)z) * (max-min)+min;
+		}else if(this.noiseMode.v()==2){
+			return SimplexNoise.noise(x, y, z) * (max-min)+min;
+		}else{
+			return parent.random((float)min,(float)max);
+		}
+	}*/
+	
+	long startTime = System.currentTimeMillis();
+	
 	@Override
 	public void draw(PGraphicsOpenGL pgl){
 
@@ -100,17 +145,21 @@ public class LayerNoise extends LayerColor {
 		
 		float shape = this.shape.v();
 		adaptedNumber = (shape==2)?adaptedNumber/10: (shape==3)?adaptedNumber/500: (shape==4)?adaptedNumber/=2000: adaptedNumber-2;
-		
+	
+		long timeLength = 10000000;
+		long timeSpeed = 2000;
+		double speedRadio = 1d/adaptedNumber*100;
+		double time = (double)(System.currentTimeMillis()%timeLength)/(double)timeLength*timeSpeed;
 		
 		for (int i = 0; i < adaptedNumber; i++) {
 			// random x,y
 			if(pos){
-				x[i]= (incNoiseX&&i>0?x[i-1]:Config.WIDTH/2)
-						+ parent.random(-1f,1f) * Config.WIDTH *noiseX * 
-						(incNoiseX&&i>0?1f/numPoints*1000:1f);
-				y[i]= (incNoiseY&&i>0?y[i-1]:Config.HEIGHT/2) + 
-						parent.random(-1f,1f) *Config.HEIGHT * noiseY * 
-						(incNoiseY&&i>0?1f/numPoints*1000:1f);
+				x[i]= (float)((incNoiseX&&i>0?x[i-1]:Config.WIDTH/2)
+						+ this.noise(-1f,1f,i*2*speedRadio,time) * Config.WIDTH *noiseX * 
+						(incNoiseX&&i>0?1f/numPoints*1000:1f));
+				y[i]= (float)((incNoiseY&&i>0?y[i-1]:Config.HEIGHT/2) + 
+						this.noise(-1f,1f,(i+adaptedNumber)*speedRadio,time) *Config.HEIGHT * noiseY * 
+						(incNoiseY&&i>0?1f/numPoints*1000:1f));
 			}
 			// random r,g,b
 			if(col){
@@ -318,6 +367,10 @@ public class LayerNoise extends LayerColor {
 //		controller.addToggle(layerType, "incNoiseC.v", false, x, y, tab, group);
 		y+=2*(h+hMargin);
 		controller.addToggle(layerType, "continous.v",false,x, y, tab, null).setCaptionLabel("continuous lines");
+		
+		y+=2*(h+hMargin);
+		controller.addRadio(layerType, "noiseMode.v",noiseMode.names,x, y, tab, null);
+		
 		
 		return(y);
 	}

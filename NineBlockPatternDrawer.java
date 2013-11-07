@@ -1,7 +1,5 @@
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.media.opengl.GL3;
 
 import processing.core.PShape;
 import processing.opengl.PJOGL;

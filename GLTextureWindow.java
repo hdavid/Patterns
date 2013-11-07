@@ -120,7 +120,7 @@ public class GLTextureWindow {
       // The GL canvas of the AWT window must have exactly the same GL capabilities
       // as the main renderer for sharing with the main context to be possible.      
       context = PJOGL.gl.getGL2().getContext(); 
-      //caps = pgl.pgl.gl.getGL().
+      //caps = PJOGL.pgl.gl.getGL().
       
       initImpl(x0, y0, width, height);   
       //Image image = Toolkit.getDefaultToolkit().createImage(PApplet.ICON_IMAGE);
@@ -138,7 +138,7 @@ public class GLTextureWindow {
       
       // Getting current context and capabilities of the main renderer.
       context = PJOGL.gl.getContext();  
-      //caps = pgl.pgl.gl.capabilities;
+      //caps = PJOGL.pgl.gl.capabilities;
       
       // Getting current parameters of the frame.
       boolean v = frame.isVisible();

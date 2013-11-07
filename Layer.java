@@ -108,7 +108,9 @@ public abstract class Layer {
 		}
 	}
 	
-	
+	/**
+	 * update layers variable before drawing.
+	 */
 	public void update(){
 		if(lastDraw!=0){
 			for (Parameter parameter : parameters.values()){
@@ -119,6 +121,10 @@ public abstract class Layer {
 		lastDraw = System.currentTimeMillis();
 	}
 	
+	/**
+	 * perform sound control
+	 * @param soundController
+	 */
 	public void soundControl(SoundController soundController){
 		for(Parameter parameter : getParameters()){
 			int groupId = parameter.getScGroup();
@@ -132,7 +138,10 @@ public abstract class Layer {
 		}
 	}
 	
-	
+	/**
+	 * clone the Layer by creating a new layer and cloning each Parameter.
+	 * other variables must be copied by over loading this function.
+	 */
 	public Layer clone(){
 		Layer layer = Layer.newLayer(parent, this.getType());
 		try {  	 
@@ -184,6 +193,8 @@ public abstract class Layer {
 	public static Layer loadLayer(Application parent,String data){
 
 		Layer layer = newLayer(parent, "LayerNineBlockPattern");
+		
+		//detect old layer types.
 		if(data.contains("bar1:1;")||data.contains("bar2:1;")){
 			layer = newLayer(parent, "LayerBars");
 		}else if(data.contains("c1B:1.0;")){
@@ -202,6 +213,7 @@ public abstract class Layer {
 					String value = line.substring(index+1);
 					Parameter parameter = layer.getParameter(key);
 					if(key.equals("layerType")){
+						//create layer, usually this line comes first in the preset file
 						layer = newLayer(parent, value);
 					}else if(key.equals("name")){
 						layer.setName(value);

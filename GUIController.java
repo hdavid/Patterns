@@ -56,7 +56,7 @@ public class GUIController extends ControlP5Util  {
 		/*for(Integer group : this.onBeat.keySet()){
 			this.onBeat.put(group, false);
 		}*/
-		
+		dspW=600;
 		
 		//CREATE TABS
 		Tab globalTab=controlP5.getTab("global");
@@ -697,7 +697,7 @@ public class GUIController extends ControlP5Util  {
 		return(y-initY);
 	}
 
-	public int wNum = 23;
+	
 	public void addControlNames(String layerType, String name,int x, int y,Tab tab,Group group){
 		int xx=0;
 		xx+=w*2+wMargin+hMargin*3+8+h+wMargin;
