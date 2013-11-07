@@ -13,7 +13,7 @@ import java.util.List;
 import javax.media.opengl.GL2;
 
 import processing.core.PApplet;
-import processing.opengl.PGL;
+import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 import oscP5.OscMessage;
 import controlP5.ControlEvent;
@@ -265,7 +265,7 @@ public class Application extends PApplet {
 		}else{
 			pgl = (PGraphicsOpenGL) g;
 		}
-		GL2 gl = PGL.gl.getGL2();
+		GL2 gl = PJOGL.gl.getGL2();
 
 		// set vertical sync on
 		if(Config.VERTICAL_SYNC){

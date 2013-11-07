@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.media.opengl.GL2;
 
-import processing.opengl.PGL;
+import processing.opengl.PJOGL;
 import processing.core.PApplet;
 import processing.opengl.PGraphicsOpenGL;
 import toxi.geom.Spline2D;
@@ -62,7 +62,7 @@ public class LayerCurve extends LayerColor {
 	@Override
 	public void draw(PGraphicsOpenGL pgl){
 
-		GL2 gl = PGL.gl.getGL2().getGL2();
+		GL2 gl = PJOGL.gl.getGL2().getGL2();
 
 		int number = (int)this.number.v();
 
@@ -303,7 +303,7 @@ public class LayerCurve extends LayerColor {
 
 	@Override
 	public void drawBackground(PGraphicsOpenGL pgl){
-		GL2 gl = PGL.gl.getGL2().getGL2();
+		GL2 gl = PJOGL.gl.getGL2().getGL2();
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f, bgAlpha.v());
 		gl.getGL2().glBegin(GL2.GL_QUADS);
 		gl.getGL2().glVertex2f(0f,0f);

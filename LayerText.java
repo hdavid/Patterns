@@ -1,5 +1,5 @@
 import processing.core.PFont;
-import processing.opengl.PGL;
+import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 
 import javax.media.opengl.GL2;
@@ -38,7 +38,7 @@ public class LayerText extends LayerMovement {
 			if(LayerText.font!=null){
 				int fontsize=30;
 				parent.textFont(LayerText.font,fontsize);
-				PGL.gl.getGL2().glClear(GL2.GL_DEPTH_BUFFER_BIT);
+				PJOGL.gl.getGL2().glClear(GL2.GL_DEPTH_BUFFER_BIT);
 				parent.fill( foregroundR, foregroundG, foregroundB,fgAlpha.v()*255);
 				parent.text(text,Config.WIDTH-parent.textWidth(text)/2,Config.HEIGHT+fontsize/2);
 			}

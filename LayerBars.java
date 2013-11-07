@@ -4,7 +4,7 @@ import javax.media.opengl.GL2;
 
 import controlP5.Group;
 import controlP5.Tab;
-import processing.opengl.PGL;
+import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 
 public class LayerBars extends LayerMovementIncremental {
@@ -23,14 +23,14 @@ public class LayerBars extends LayerMovementIncremental {
 	public void draw(PGraphicsOpenGL pgl){
 		if(bar1.v()==1 || bar2.v()==1){
 			//transform
-			PGL.gl.getGL2().glPushMatrix();
-			PGL.gl.getGL2().glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
+			PJOGL.gl.getGL2().glPushMatrix();
+			PJOGL.gl.getGL2().glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
 			//PGL.gl2x.glScalef(zoom.v()/4f,zoom.v()/4f,0);
 			//PGL.gl2x.glRotatef(angle.v()/(2f*(float)Math.PI)*360f,0,0,1); 
 			//gl.glTranslatef(scrollX.v()*4f,scrollY.v()*4f,0);//sync scroll with patterns
 			//PGL.gl2x.glTranslatef(scrollX.v(),scrollY.v(),0);
 			fillAll();
-			PGL.gl.getGL2().glPopMatrix();
+			PJOGL.gl.getGL2().glPopMatrix();
 		}
 	}
 
@@ -58,37 +58,37 @@ public class LayerBars extends LayerMovementIncremental {
 		if(range>0){
 			if(bar1.v()==1){
 				for(int x=-range;x<=range;x++){
-					PGL.gl.getGL2().glPushMatrix();
+					PJOGL.gl.getGL2().glPushMatrix();
 
-					PGL.gl.getGL2().glScalef(zoom.v(izoom,x,range)/4f,zoom.v(izoom,x,range)/4f,0);
-					PGL.gl.getGL2().glRotatef(angle.v(iangle,x,range)/(2f*(float)Math.PI)*360f,0,0,1); 
+					PJOGL.gl.getGL2().glScalef(zoom.v(izoom,x,range)/4f,zoom.v(izoom,x,range)/4f,0);
+					PJOGL.gl.getGL2().glRotatef(angle.v(iangle,x,range)/(2f*(float)Math.PI)*360f,0,0,1); 
 					//gl.glTranslatef(scrollX.v()*4f,scrollY.v()*4f,0);//sync scroll with patterns
-					PGL.gl.getGL2().glTranslatef(scrollX.v(iscrollX,x,range),scrollY.v(iscrollY,x,range),0);
+					PJOGL.gl.getGL2().glTranslatef(scrollX.v(iscrollX,x,range),scrollY.v(iscrollY,x,range),0);
 					
 					int xOffset=(int)(width*(x)/-2f);
 					paint(xOffset,x,range);
 					//PGL.gl2x.glRotatef(-1*iangle.v()*x/(2f*(float)Math.PI)*360f,0,0,1);
-					PGL.gl.getGL2().glPopMatrix();
+					PJOGL.gl.getGL2().glPopMatrix();
 				}
 			}
 			
-			PGL.gl.getGL2().glTranslatef(-scrollX.v(),-scrollY.v(),0);
-			PGL.gl.getGL2().glRotatef(rotate.v()/(2f*(float)Math.PI)*360f+90f,0,0,1);
-			PGL.gl.getGL2().glTranslatef(scrollY.v(),scrollX.v(),0);
+			PJOGL.gl.getGL2().glTranslatef(-scrollX.v(),-scrollY.v(),0);
+			PJOGL.gl.getGL2().glRotatef(rotate.v()/(2f*(float)Math.PI)*360f+90f,0,0,1);
+			PJOGL.gl.getGL2().glTranslatef(scrollY.v(),scrollX.v(),0);
 			
 			if(bar2.v()==1){
 				for(int x=-range;x<=range;x++){
-					PGL.gl.getGL2().glPushMatrix();
+					PJOGL.gl.getGL2().glPushMatrix();
 
-					PGL.gl.getGL2().glScalef(zoom.v(izoom,x,range)/4f,zoom.v(izoom,x,range)/4f,0);
-					PGL.gl.getGL2().glRotatef(angle.v(iangle,x,range)/(2f*(float)Math.PI)*360f,0,0,1); 
+					PJOGL.gl.getGL2().glScalef(zoom.v(izoom,x,range)/4f,zoom.v(izoom,x,range)/4f,0);
+					PJOGL.gl.getGL2().glRotatef(angle.v(iangle,x,range)/(2f*(float)Math.PI)*360f,0,0,1); 
 					//gl.glTranslatef(scrollX.v()*4f,scrollY.v()*4f,0);//sync scroll with patterns
-					PGL.gl.getGL2().glTranslatef(scrollY.v(iscrollY,x,range),scrollX.v(iscrollX,x,range),0);
+					PJOGL.gl.getGL2().glTranslatef(scrollY.v(iscrollY,x,range),scrollX.v(iscrollX,x,range),0);
 					
 					int xOffset=(int)(width*(x)/-2f);
 					paint(xOffset,x,range);
 					//PGL.gl2x.glRotatef(-1*iangle.v()*x/(2f*(float)Math.PI)*360f,0,0,1);
-					PGL.gl.getGL2().glPopMatrix();
+					PJOGL.gl.getGL2().glPopMatrix();
 					
 				}
 			}
@@ -103,7 +103,7 @@ public class LayerBars extends LayerMovementIncremental {
 		alpha=fgAlpha.v(ifgAlpha,i+1,range);
 		
 		//gl.glPushMatrix();
-		PGL.gl.getGL2().glTranslatef(x,0,0);
+		PJOGL.gl.getGL2().glTranslatef(x,0,0);
 		//PGL.gl2x.glCallList(patternList); 
 		shape(new float[][]{
 				{-0.25f*size.v(isize,i+1,range)/4f,-1f*200},
@@ -111,7 +111,7 @@ public class LayerBars extends LayerMovementIncremental {
 				{0.25f*size.v(isize,i+1,range)/4f,1f*200},
 				{-0.25f*size.v(isize,i+1,range)/4f,1f*200}
 		});
-		PGL.gl.getGL2().glTranslatef(-1*x,0,0);
+		PJOGL.gl.getGL2().glTranslatef(-1*x,0,0);
 		//gl.glPopMatrix();
 	}
 
@@ -121,25 +121,25 @@ public class LayerBars extends LayerMovementIncremental {
 	 */
 	private void shape(float[][] points){
 		float ratio=0; 
-		PGL.gl.getGL2().getGL2().glBegin(GL2.GL_POLYGON);
+		PJOGL.gl.getGL2().getGL2().glBegin(GL2.GL_POLYGON);
 		for(int i=0;i<points.length;i++){
 			ratio=(float)i/(float)points.length*gradient.v() ;
-			PGL.gl.getGL2().glColor4f(
+			PJOGL.gl.getGL2().glColor4f(
 					(1-ratio)*foregroundR/255f +(ratio)*backgroundR/255f 
 					,    (1-ratio)*foregroundG/255f +(ratio)*backgroundG/255f,
 					(1-ratio)*foregroundB/255f +(ratio)*backgroundB/255f
 					,alpha
 			);
-			PGL.gl.getGL2().getGL2().glVertex2f(points[i][0]*width,points[i][1]*height);	
+			PJOGL.gl.getGL2().getGL2().glVertex2f(points[i][0]*width,points[i][1]*height);	
 		}
-		PGL.gl.getGL2().getGL2().glEnd();
+		PJOGL.gl.getGL2().getGL2().glEnd();
 	}
 
 	@Override
 	public void drawBackground(PGraphicsOpenGL pgl){
 		HSBtoRGB();
 		
-		GL2 gl = PGL.gl.getGL2().getGL2();
+		GL2 gl = PJOGL.gl.getGL2().getGL2();
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f, bgAlpha.v());
 		gl.getGL2().glBegin(GL2.GL_QUADS);
 		gl.getGL2().glVertex2f(0f,0f);

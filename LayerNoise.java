@@ -9,7 +9,7 @@ import javax.media.opengl.GL2;
 import controlP5.Group;
 import controlP5.Tab;
 
-import processing.opengl.PGL;
+import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 
 public class LayerNoise extends LayerColor {
@@ -204,7 +204,7 @@ public class LayerNoise extends LayerColor {
 		vbuffer.rewind();
 		cbuffer.rewind();
 		
-		GL2 gl2 = PGL.gl.getGL2();
+		GL2 gl2 = PJOGL.gl.getGL2();
 		
 		//draw
 		float size = this.size.v();
@@ -267,7 +267,7 @@ public class LayerNoise extends LayerColor {
 	public void drawBackground(PGraphicsOpenGL pgl) {
 		HSBtoRGB();
 		HSBtoRGB();
-		GL2 gl = PGL.gl.getGL2().getGL2();
+		GL2 gl = PJOGL.gl.getGL2().getGL2();
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f,bgAlpha.v());
 		gl.getGL2().glBegin(GL2.GL_QUADS);
 		gl.getGL2().glVertex2f(0f,0f);

@@ -4,7 +4,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GL3;
 
 import processing.core.PShape;
-import processing.opengl.PGL;
+import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 
 public class NineBlockPatternDrawer{
@@ -77,7 +77,7 @@ public class NineBlockPatternDrawer{
 	GL2 gl = null;
 	
 	public void draw(){
-		gl = PGL.gl.getGL2();
+		gl = PJOGL.gl.getGL2();
 		if(useShape){
 			
 		}else if(useGlList && patternList==-1){
@@ -139,7 +139,7 @@ public class NineBlockPatternDrawer{
 
 
 	public void paintBackground(){
-		gl = PGL.gl.getGL2();
+		gl = PJOGL.gl.getGL2();
 		gl.glColor4f( layer.backgroundR/255f, layer.backgroundG/255f, layer.backgroundB/255f,layer.bgAlpha.v());
 		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2f(0f,0f);
