@@ -1,13 +1,22 @@
+import java.awt.Frame;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import processing.core.PApplet;
+import sojamo.drop.SDrop;
+
 import controlP5.Accordion;
 import controlP5.Button;
+import controlP5.ControlEvent;
 import controlP5.ControlP5;
 import controlP5.ControllerGroup;
+import controlP5.ControllerList;
 import controlP5.Group;
 import controlP5.Numberbox;
 import controlP5.RadioButton;
@@ -18,20 +27,199 @@ import controlP5.Textlabel;
 import controlP5.Toggle;
 
 
-public abstract class ControlP5Util  {
+public abstract class ControlP5Util implements Controller  {
 
 	protected ControlP5 controlP5;
-	public int wMargin = 4;
-	public int hMargin = wMargin;
-	protected int toggleActiveColor=1;
-	protected int selectorActiveColor=1;
-	private List<Textfield> textFields = new ArrayList<Textfield>();
+	
+	protected int windowH = 580;
+	protected int windowW = 820;
+	protected boolean ready = false;
+	protected int wMargin = 4;
+	protected int hMargin = wMargin;
+	protected int toggleActiveColor=-1;
+	protected int selectorActiveColor=-1;
+	protected boolean visible = true;
+	
+	protected SDrop drop;
+
+	protected int lastGuiUpdate = 0;
+	protected int refresh = 100;//milliseconds between gui refresh
+	protected Application app;
+	protected ControlFrame controlFrame;
+	protected int lastGuiDraw=0;
+	
+	protected List<Textfield> textFields = new ArrayList<Textfield>();
 	
 	public int w = 100;
 	public int h = 10;
 	
 	public abstract void update();
 	public abstract void setup();
+	
+	public abstract void mousePress(int x,int y, int buttons);
+	public abstract void mouseClick(int x,int y, int buttons);
+	public abstract void mouseRelease(int x,int y, int buttons);
+	public abstract void drawCustomUI(PApplet theApplet);
+	public abstract void controlEvent(ControlEvent theEvent);
+	
+	public ControlP5Util(Application app,boolean window,boolean visible){
+		toggleActiveColor=app.color(40,240,40);
+		selectorActiveColor=app.color(240,40,40);
+		System.out.println("GUI Controller.");
+		this.app=app;
+		if(this.app!=null){
+			
+			if(Config.GUI_WINDOW){
+				controlFrame = new ControlFrame(this,"patterns controller (#"+app.id+")",this.windowH,this.windowW);
+				if(app.presetManager!=null || "".equals(drop)){
+					drop = new SDrop(controlFrame, app);	
+				}
+				controlFrame.addMouseListener(new MyMouseListener() );
+				controlFrame.addKeyListener(this.app);
+				while(controlFrame.cp5==null){
+					try {Thread.sleep(50);} catch (Exception e) {}
+				}
+				this.controlP5 = controlFrame.cp5;
+			}else{
+				this.controlP5 = new ControlP5(app);
+				app.frame.addMouseListener(new MyMouseListener());
+			}
+			this.hide();
+			//this.controlP5.setFont(this.app.createFont("", 8));
+			this.controlP5.setMoveable(false);
+			this.controlP5.disableShortcuts();
+			
+			setup();
+
+			if(Config.GUI_VISIBLE){
+				this.show();
+			}else{
+				this.hide();
+			}
+			
+			this.ready=true;	
+		}
+
+	}
+	
+	public void control(){}
+
+	public void hide(){
+		if(controlFrame!=null){
+			this.controlFrame.setVisible(false);
+		}
+		this.controlP5.hide();
+		visible=false;
+	}
+	public void show(){
+		if(controlFrame!=null){
+			this.controlFrame.setVisible(true);
+		}
+		this.controlP5.show();
+		visible=true;
+	}
+	public boolean isVisible(){
+		return(this.visible);
+	}
+	public void toggleVisiblity(){
+		if(visible){
+			hide();
+		}else{
+			show();
+		}
+	}
+	
+	class MyMouseListener implements MouseListener{
+		public void mouseClicked(MouseEvent e) {
+			mouseClick(e.getX(),e.getY(),e.getButton());
+		}
+		public void mousePressed(MouseEvent e) {
+			mousePress(e.getX(),e.getY(),e.getButton());
+		}
+		public void mouseReleased(MouseEvent e) {
+			mouseRelease(e.getX(),e.getY(),e.getButton());
+		}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+	}
+
+
+	public class ControlFrame extends PApplet {
+		private static final long serialVersionUID = -8996418478036660977L;
+		volatile ControlP5 cp5;
+		ControlP5Util parent;
+		int w, h;
+		Frame f;
+		ControlFrame(ControlP5Util parent,String name,int h, int w) {
+			f = new Frame(name);
+			this.h=h;
+			this.w=w;
+			f.add(this);
+			this.init();
+			f.setTitle(name);
+			f.setSize(this.w, this.h);
+			f.setLocation(120, 120);
+			f.setResizable(false);
+			f.setVisible(true);
+			f.setVisible(false);
+			this.parent=parent;
+		}
+		public void keyPressed(){
+			if(key==27){
+				key=0;//disable ESC
+			}
+		}
+		public void setup() {
+			size(w, h);
+			frameRate(25);
+			cp5 = new ControlP5(this);
+		}
+		public void draw() {
+			background(0,0,0);
+			if(ready){
+				drawCustomUI(this);
+			}
+		}
+		public void setVisible(boolean visible){
+			f.setVisible(visible);
+			super.setVisible(visible);
+		}
+		
+		public void controlEvent(ControlEvent theEvent) {
+			parent.controlEvent(theEvent);
+		}
+	}
+
+	
+	/**
+	 * switch between gui tabs
+	 */
+	public void switchTab(){
+		ControllerList tabs = controlP5.controlWindow.getTabs();
+		String currentTabName=controlP5.controlWindow.getCurrentTab().getName();
+		for(int i=0;i<tabs.size();i++){
+			if(tabs.get(i).getName().equals(currentTabName)){
+				if(i==tabs.size()-1){
+					controlP5.controlWindow.activateTab(tabs.get(1).getName());
+				}else{
+					controlP5.controlWindow.activateTab(tabs.get(i+1).getName());	
+				}
+			}
+		}
+	}
+	
+	public void autoSelectTab(){
+		Layer layer = app.layers[app.currentLayer];
+			if(layer!=null){
+			ControllerList tabs = controlP5.controlWindow.getTabs();
+			String layerType = layer.getType();
+			for(int i=0;i<tabs.size();i++){
+				if(tabs.get(i).getName().equals(layerType)){
+					controlP5.controlWindow.activateTab(tabs.get(i).getName());	
+				}
+			}
+		}
+	}
 	
 	
 	public boolean textFieldIsFocus(){
