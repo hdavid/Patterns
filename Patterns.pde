@@ -28,7 +28,7 @@ import ddf.minim.analysis.*;
 import dmxP512.DmxP512;
 
 
-public class Patterns_7 extends PApplet {
+public class Patterns extends PApplet {
 
         public static void main(String[]args){
           Application.main(args);
