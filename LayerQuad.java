@@ -1,8 +1,6 @@
 
 import javax.media.opengl.GL2;
 
-import processing.opengl.PJOGL;
-import processing.opengl.PGraphicsOpenGL;
 import controlP5.Group;
 import controlP5.Tab;
 
@@ -41,14 +39,13 @@ public class LayerQuad extends LayerColor {
 
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl){
+	public void draw(GL2 gl){
 
 		//SoundControllerGroup group = parent.soundController.getGroups().get(0);
 		HSBtoRGB();
-		PJOGL.gl.getGL2().glPushMatrix();
-		//PJOGL.gl.getGL2().glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
+		gl.glPushMatrix();
+		//PJOGL.gl.glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
 
-		GL2 gl = PJOGL.gl.getGL2();
 		gl.glBegin(GL2.GL_QUADS);
 		float g = gradient.v();
 		float ag = 1-g;
@@ -87,8 +84,8 @@ public class LayerQuad extends LayerColor {
 
 
 
-		PJOGL.gl.getGL2().getGL2().glEnd();
-		PJOGL.gl.getGL2().glPopMatrix();
+		gl.glEnd();
+		gl.glPopMatrix();
 	}
 
 
@@ -97,15 +94,15 @@ public class LayerQuad extends LayerColor {
 
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl){
-		GL2 gl = PJOGL.gl.getGL2().getGL2();
+	public void drawBackground(GL2 gl){
+		//GL2 gl = PJOGL.gl.getGL2();
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f, bgAlpha.v());
-		gl.getGL2().glBegin(GL2.GL_QUADS);
-		gl.getGL2().glVertex2f(0f,0f);
-		gl.getGL2().glVertex2f(Config.WIDTH,0f);
-		gl.getGL2().glVertex2f(Config.WIDTH,Config.HEIGHT);
-		gl.getGL2().glVertex2f(0f,Config.HEIGHT);
-		gl.getGL2().glEnd();
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2f(0f,0f);
+		gl.glVertex2f(Config.WIDTH,0f);
+		gl.glVertex2f(Config.WIDTH,Config.HEIGHT);
+		gl.glVertex2f(0f,Config.HEIGHT);
+		gl.glEnd();
 	}
 
 	@Override

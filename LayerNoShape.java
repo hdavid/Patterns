@@ -7,8 +7,6 @@ import javax.media.opengl.GL2;
 import controlP5.Group;
 import controlP5.Tab;
 
-import processing.opengl.PJOGL;
-import processing.opengl.PGraphicsOpenGL;
 
 public class LayerNoShape extends Layer {
 
@@ -66,29 +64,29 @@ public class LayerNoShape extends Layer {
 	}
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl){
+	public void draw(GL2 gl){
 		HSBtoRGB();
-		PJOGL.gl.getGL2().getGL2().glBegin(GL2.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 
-		PJOGL.gl.getGL2().glColor4f( cc1R/255f, cc1G/255f, cc1B/255f,c1Alpha.v());
-		PJOGL.gl.getGL2().getGL2().glVertex2f(0,0);
+		gl.glColor4f( cc1R/255f, cc1G/255f, cc1B/255f,c1Alpha.v());
+		gl.glVertex2f(0,0);
 
-		PJOGL.gl.getGL2().glColor4f( cc2R/255f, cc2G/255f, cc2B/255f,c2Alpha.v());
-		PJOGL.gl.getGL2().getGL2().glVertex2f(Config.WIDTH,0);
+		gl.glColor4f( cc2R/255f, cc2G/255f, cc2B/255f,c2Alpha.v());
+		gl.glVertex2f(Config.WIDTH,0);
 
-		PJOGL.gl.getGL2().glColor4f( cc3R/255f, cc3G/255f, cc3B/255f,c3Alpha.v());
-		PJOGL.gl.getGL2().getGL2().glVertex2f(Config.WIDTH,Config.HEIGHT);
+		gl.glColor4f( cc3R/255f, cc3G/255f, cc3B/255f,c3Alpha.v());
+		gl.glVertex2f(Config.WIDTH,Config.HEIGHT);
 
-		PJOGL.gl.getGL2().glColor4f( cc4R/255f, cc4G/255f, cc4B/255f,c4Alpha.v());
-		PJOGL.gl.getGL2().getGL2().glVertex2f(0,Config.HEIGHT);
+		gl.glColor4f( cc4R/255f, cc4G/255f, cc4B/255f,c4Alpha.v());
+		gl.glVertex2f(0,Config.HEIGHT);
 
-		PJOGL.gl.getGL2().getGL2().glEnd();
+		gl.glEnd();
 	}
 
 
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl){}
+	public void drawBackground(GL2 gl){}
 
 	@Override
 	public int buildUI(GUIController controller, int x, int y, Tab tab, Group group) {

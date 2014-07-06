@@ -83,7 +83,7 @@ public class SoundController implements Controller {
 		
 		
 		for(int i=0;i<6;i++){
-			groups.add(new SoundControllerGroup(i+"",numZones, ranges, repeatDelay));
+			groups.add(new SoundControllerGroup(i+"",numZones, ranges, repeatDelay, this.app));
 			SoundControllerGroup group = groups.get(i);
 			
 			if(i==0){

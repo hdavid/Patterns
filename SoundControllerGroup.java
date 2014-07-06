@@ -1,7 +1,9 @@
+import signal.library.SignalFilter;
+
 
 public class SoundControllerGroup {
 
-	public SoundControllerGroup(String name,int bands,int[] ranges, int repeatDelay){
+	public SoundControllerGroup(String name,int bands,int[] ranges, int repeatDelay,Application app){
 		this.name = name;
 		this.historySize=ranges[ranges.length-1];
 		this.activeBands = new boolean[bands];
@@ -12,6 +14,9 @@ public class SoundControllerGroup {
 		this.beatSense=8;
 		this.ranges=ranges;
 		this.repeatDelay=repeatDelay;
+		this.signalFilter = new SignalFilter(app);
+		this.signalFilter.setMinCutoff(10);
+		
 	}
 
 	//settings
@@ -37,6 +42,9 @@ public class SoundControllerGroup {
 	private int historySize;
 	private int[] ranges;
 	private boolean onBeat;
+	
+	private SignalFilter signalFilter;
+	private boolean filter=true;
 
 	public void process(float[][] energyBandHistory,float[][] bandAvgs, int index){
 		energyThreshold=0.5f;
@@ -65,16 +73,24 @@ public class SoundControllerGroup {
 			//score++;
 		}
 
-
 		//smooth energy
 		float smooth = 0.8f;
-		if(smoothEnergy<smooth*energyHistory[index]){
-			smoothEnergy*=smooth;
-		}else{
-			smoothEnergy=energyHistory[index];
-		}
+		
+			if(smoothEnergy<smooth*energyHistory[index]){
+				smoothEnergy*=smooth;
+			}else{
+				smoothEnergy=energyHistory[index];
+			}
+		
 		energyThreshold=0.1f;
 
+		if(filter==false){
+			this.signalFilter.setMinCutoff(0.05f);
+			this.signalFilter.setBeta(4.0f);
+			// minCutoff = 0.05; // decrease this to get rid of slow speed jitter
+			//float beta      = 4.0;  // increase this to get rid of high speed lag
+			score = 1000f*signalFilter.filterUnitFloat(score/1000f,System.currentTimeMillis()/100d);
+		}
 		//compute score
 		if (energyHistory[index] > energyThreshold){
 			scoreHistory[index] = score;

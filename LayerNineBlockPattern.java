@@ -1,7 +1,7 @@
+import javax.media.opengl.GL2;
+
 import controlP5.Group;
 import controlP5.Tab;
-import processing.opengl.PGraphicsOpenGL;
-
 
 public class LayerNineBlockPattern extends LayerMovementIncremental {
 
@@ -137,21 +137,21 @@ public class LayerNineBlockPattern extends LayerMovementIncremental {
 	}
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl) {
+	public void draw(GL2 gl) {
 		//convert color from HSB into RGB color space for rendering.
 		HSBtoRGB();
 
-		drawer.set(this, pgl);
+		drawer.set(this, gl);
 
-		drawer.draw();
+		drawer.draw(gl);
 
 	}
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl) {
+	public void drawBackground(GL2 gl) {
 		HSBtoRGB();
-		drawer.set(this, pgl);
-		drawer.paintBackground();
+		drawer.set(this, gl);
+		drawer.paintBackground(gl);
 	}
 
 	public void randomizePattern(){

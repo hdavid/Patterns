@@ -1,10 +1,10 @@
 
 import java.awt.Color;
 
+import javax.media.opengl.GL2;
+
 import controlP5.Group;
 import controlP5.Tab;
-
-import processing.opengl.PGraphicsOpenGL;
 
 public class LayerDMX extends Layer {
 
@@ -29,7 +29,7 @@ public class LayerDMX extends Layer {
 
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl){
+	public void draw(GL2 gl){
 		for(FloatParameter dmxSrc: new FloatParameter[]{dmx1dst,dmx1dst,dmx1dst,dmx1dst,dmx1dst,dmx1dst}){
 			ouputColor(
 					getFloatParameter(dmxSrc.getName()+"H"),
@@ -60,7 +60,7 @@ public class LayerDMX extends Layer {
 
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl){}
+	public void drawBackground(GL2 gl){}
 
 	@Override
 	public int buildUI(GUIController controller, int x, int y, Tab tab, Group group) {

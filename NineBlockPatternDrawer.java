@@ -2,8 +2,6 @@
 import javax.media.opengl.GL2;
 
 import processing.core.PShape;
-import processing.opengl.PJOGL;
-import processing.opengl.PGraphicsOpenGL;
 
 public class NineBlockPatternDrawer{
 
@@ -66,16 +64,15 @@ public class NineBlockPatternDrawer{
 
 	   }
 	
-	public void set(LayerNineBlockPattern layer,PGraphicsOpenGL pgl){
+	public void set(LayerNineBlockPattern layer,GL2 gl){
 		this.layer=layer;
 		computePositions();
 		
 	}
 	
-	GL2 gl = null;
 	
-	public void draw(){
-		gl = PJOGL.gl.getGL2();
+	public void draw(GL2 gl){
+		//gl = PJOGL.gl.getGL2();
 		if(useShape){
 			
 		}else if(useGlList && patternList==-1){
@@ -91,16 +88,16 @@ public class NineBlockPatternDrawer{
 		// gl.glTranslatef(-width/2,-Config.HEIGHT/2,0);  
 		gl.glTranslatef(layer.scrollX.v(),layer.scrollY.v(),0);
 		
-		fillAll();
+		fillAll(gl);
 		gl.glPopMatrix();
 
 	}
 
-	private void fillAll(){
+	private void fillAll(GL2 gl){
 		if(useShape){
-			makeShape();
+			makeShape(gl);
 		}else if(useGlList){
-			makeList();
+			makeList(gl);
 		}
 		gl.glColor4f( layer.foregroundR/255f, layer.foregroundG/255f, layer.foregroundB/255f,1);
 
@@ -121,23 +118,23 @@ public class NineBlockPatternDrawer{
 			for(int y=0;y<=range;y++){        
 				layer.yOffset=layer.height*y;
 
-				paint(layer.xOffset,layer.yOffset,+range+x + range+y,incRange);
+				paint(layer.xOffset,layer.yOffset,+range+x + range+y,incRange, gl);
 				if(x!=0){
-					paint(-layer.xOffset,layer.yOffset,range-x + range+y,incRange);
+					paint(-layer.xOffset,layer.yOffset,range-x + range+y,incRange,gl);
 				}
 				if(y!=0){
-					paint(layer.xOffset,-layer.yOffset,range+x + range-y,incRange);
+					paint(layer.xOffset,-layer.yOffset,range+x + range-y,incRange,gl);
 				}
 				if(x!=0&&y!=0){
-					paint(-layer.xOffset,-layer.yOffset,range-x + range-y,incRange);
+					paint(-layer.xOffset,-layer.yOffset,range-x + range-y,incRange,gl);
 				}
 			}
 		}
 	}
 
 
-	public void paintBackground(){
-		gl = PJOGL.gl.getGL2();
+	public void paintBackground(GL2 gl){
+		//gl = PJOGL.gl.getGL2();
 		gl.glColor4f( layer.backgroundR/255f, layer.backgroundG/255f, layer.backgroundB/255f,layer.bgAlpha.v());
 		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2f(0f,0f);
@@ -148,7 +145,7 @@ public class NineBlockPatternDrawer{
 	}
 
 
-	private void paint(float x,float y,int inc,int range){
+	private void paint(float x,float y,int inc,int range,GL2 gl){
 		gl.glPushMatrix();
 		gl.glTranslatef(x+layer.iscrollX.v()*inc,y+layer.iscrollY.v()*inc,0);
 		if(useShape){
@@ -158,43 +155,43 @@ public class NineBlockPatternDrawer{
 		}else if(useGlList){
 			gl.getGL2().glCallList(patternList);
 		}else{
-			drawOnePattern(inc,range);
+			drawOnePattern(inc,range,gl);
 		}
 		gl.glPopMatrix();
 	}
 
-	private void drawOnePattern(int inc,int range){ 
+	private void drawOnePattern(int inc,int range,GL2 gl){ 
 		if(inc!=0){
 			layer.HSBtoRGB(inc, range);
 		}
 		//paint center
-		paintShape(layer.shapeCenter.v(),0,inc,range);
+		paintShape(layer.shapeCenter.v(),0,inc,range,gl);
 		//paint other shapes
-		paintShape(layer.shapeCorner.v(),1,inc,range);
-		paintShape(layer.shapeSide.v(),2,inc,range);
-		paintShape(layer.shapeCorner.v(),3,inc,range);
-		paintShape(layer.shapeSide.v(),4,inc,range);
-		paintShape(layer.shapeCorner.v(),5,inc,range);
-		paintShape(layer.shapeSide.v(),6,inc,range);
-		paintShape(layer.shapeCorner.v(),7,inc,range);
-		paintShape(layer.shapeSide.v(),8,inc,range);
+		paintShape(layer.shapeCorner.v(),1,inc,range,gl);
+		paintShape(layer.shapeSide.v(),2,inc,range,gl);
+		paintShape(layer.shapeCorner.v(),3,inc,range,gl);
+		paintShape(layer.shapeSide.v(),4,inc,range,gl);
+		paintShape(layer.shapeCorner.v(),5,inc,range,gl);
+		paintShape(layer.shapeSide.v(),6,inc,range,gl);
+		paintShape(layer.shapeCorner.v(),7,inc,range,gl);
+		paintShape(layer.shapeSide.v(),8,inc,range,gl);
 	}
 	
-	private void makeList(){ 
+	private void makeList(GL2 gl){ 
 		//layer.parent.beginRecord(pgl);
 		gl.glNewList(patternList,GL2.GL_COMPILE);
-		drawOnePattern(0,0);
+		drawOnePattern(0,0,gl);
 		gl.glEndList();
 		//layer.parent.endRecord();
 	}
 
-	private void makeShape(){ 	
+	private void makeShape(GL2 gl){ 	
 		shape = layer.parent.createShape();
-		drawOnePattern(0,0);
+		drawOnePattern(0,0,gl);
 		//shape.endShape();
 	}
 
-	private void paintShape(int shapeNr,int position,int inc,int range){
+	private void paintShape(int shapeNr,int position,int inc,int range,GL2 gl){
 		
 		float r1 = rotations[position]/(2*(float)Math.PI)*360;
 		float r2 = layer.rotate.v(layer.irotate,inc,range)/(2*(float)Math.PI)*360;
@@ -226,52 +223,52 @@ public class NineBlockPatternDrawer{
 		
 		switch(shapeNr){
 		case 1: 
-			paintShape1(position,inc,range); 
+			paintShape1(position,inc,range,gl); 
 			break;
 		case 2: 
-			paintShape2(position,inc,range); 
+			paintShape2(position,inc,range,gl); 
 			break;
 		case 3: 
-			paintShape3(position,inc,range); 
+			paintShape3(position,inc,range,gl); 
 			break;
 		case 4: 
-			paintShape4(position,inc,range); 
+			paintShape4(position,inc,range,gl); 
 			break;
 		case 5: 
-			paintShape5(position,inc,range); 
+			paintShape5(position,inc,range,gl); 
 			break;
 		case 6: 
-			paintShape6(position,inc,range); 
+			paintShape6(position,inc,range,gl); 
 			break;
 		case 7: 
-			paintShape7(position,inc,range); 
+			paintShape7(position,inc,range,gl); 
 			break;
 		case 8: 
-			paintShape8(position,inc,range); 
+			paintShape8(position,inc,range,gl); 
 			break;
 		case 9: 
-			paintShape9(position,inc,range); 
+			paintShape9(position,inc,range,gl); 
 			break;
 		case 10: 
-			paintShape10(position,inc,range); 
+			paintShape10(position,inc,range,gl); 
 			break;
 		case 11: 
-			paintShape11(position,inc,range); 
+			paintShape11(position,inc,range,gl); 
 			break;
 		case 12: 
-			paintShape12(position,inc,range); 
+			paintShape12(position,inc,range,gl); 
 			break;
 		case 13: 
-			paintShape13(position,inc,range); 
+			paintShape13(position,inc,range,gl); 
 			break;
 		case 14: 
-			paintShape14(position,inc,range); 
+			paintShape14(position,inc,range,gl); 
 			break;
 		case 15: 
-			paintShape15(position,inc,range); 
+			paintShape15(position,inc,range,gl); 
 			break;
 		case 16: 
-			paintShape16(position,inc,range); 
+			paintShape16(position,inc,range,gl); 
 			break;
 		}
 
@@ -282,115 +279,115 @@ public class NineBlockPatternDrawer{
 	}
 
 
-	private void paintShape1(int position,int inc,int range){
+	private void paintShape1(int position,int inc,int range,GL2 gl){
 		quadri(inc,range,position,
 				-layer.width/6,-layer.width/6,
 				layer.width/6,-layer.width/6,
 				layer.width/6,layer.width/6,
-				-layer.width/6,layer.width/6);
+				-layer.width/6,layer.width/6,gl);
 	}
-	private void paintShape2(int position,int inc,int range){
+	private void paintShape2(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				-layer.width/6,-layer.width/6,
 				layer.width/6,-layer.width/6,
-				-layer.width/6,layer.width/6);
+				-layer.width/6,layer.width/6,gl);
 	}
-	private void paintShape3(int position,int inc,int range){
+	private void paintShape3(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				-layer.width/6,layer.width/6,
 				0,-layer.width/6,
-				layer.width/6,layer.width/6);
+				layer.width/6,layer.width/6,gl);
 	}
-	private void paintShape4(int position,int inc,int range){
+	private void paintShape4(int position,int inc,int range,GL2 gl){
 		quadri(inc,range,position,
 				-layer.width/6,-layer.width/6,
 				0,-layer.width/6,
 				0,layer.width/6,
-				-layer.width/6,layer.width/6);
+				-layer.width/6,layer.width/6,gl);
 	}
-	private void paintShape5(int position,int inc,int range){
+	private void paintShape5(int position,int inc,int range,GL2 gl){
 		quadri(inc,range,position,
 				0,0 -layer.width/6,
 				layer.width/6,0+ 0,
 				0, layer.height/6,
-				-layer.width/6,0+ 0);
+				-layer.width/6,0+ 0,gl);
 	}
-	private void paintShape6(int position,int inc,int range){
+	private void paintShape6(int position,int inc,int range,GL2 gl){
 		quadri(inc,range,position,
 				-layer.width/6, -layer.width/6,
 				layer.width/6, 0,
 				layer.width/6,layer.width/6,
-				0, layer.width/6);
+				0, layer.width/6,gl);
 	}
-	private void paintShape7(int position,int inc,int range){
+	private void paintShape7(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				0, -layer.width/6,
 				layer.width/12, 0,
-				-layer.width/12, 0);
+				-layer.width/12, 0,gl);
 		tri(inc,range,position,
 				layer.width/12, 0,
 				layer.width/6, layer.width/6,
-				0, layer.width/6);
+				0, layer.width/6,gl);
 		tri(inc,range,position,
 				-layer.width/12, 0,
 				0, layer.width/6,
-				-layer.width/6, layer.width/6);
+				-layer.width/6, layer.width/6,gl);
 	}
-	private void paintShape8(int position,int inc,int range){
+	private void paintShape8(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				-layer.width/6, -layer.width/6,
 				layer.width/6, 0,
-				0, layer.width/6);
+				0, layer.width/6,gl);
 	}
-	private void paintShape9(int position,int inc,int range){
+	private void paintShape9(int position,int inc,int range,GL2 gl){
 		quadri(inc,range,position,
 				-layer.width/12, -layer.width/12,
 				layer.width/12,-layer.width/12,
 				layer.width/12, layer.width/12,
-				-layer.width/12, layer.width/12);
+				-layer.width/12, layer.width/12,gl);
 	}
-	private void paintShape10(int position,int inc,int range){
+	private void paintShape10(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				0,0 -layer.width/6,
 				layer.width/6, -layer.width/6,
-				0, 0);
+				0, 0,gl);
 		tri(inc,range,position,
 				-layer.width/6, 0,
 				0, 0,
-				-layer.width/6, layer.width/6);
+				-layer.width/6, layer.width/6,gl);
 	}
-	private void paintShape11(int position,int inc,int range){
+	private void paintShape11(int position,int inc,int range,GL2 gl){
 		quadri(inc,range,position,
 				-layer.width/6, -layer.width/6,
 				-layer.width/6, 0,
 				0,0,
-				0,-layer.width/6);
+				0,-layer.width/6,gl);
 	} 
-	private void paintShape12(int position,int inc,int range){
+	private void paintShape12(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				-layer.width/6, 0,
 				layer.width/6, 0,
-				0, -layer.width/6  );
+				0, -layer.width/6,gl);
 	}
-	private void paintShape13(int position,int inc,int range){
+	private void paintShape13(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				0,0,
 				layer.width/6, layer.width/6,
-				-layer.width/6,layer.width/6);
+				-layer.width/6,layer.width/6,gl);
 	}
-	private void paintShape14(int position,int inc,int range){
+	private void paintShape14(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				0,-layer.width/6,
 				0,0,
-				-layer.width/6,0);
+				-layer.width/6,0,gl);
 	}
-	private void paintShape15(int position,int inc,int range){
+	private void paintShape15(int position,int inc,int range,GL2 gl){
 		tri(inc,range,position,
 				0,-layer.width/6,
 				-layer.width/6,0,
-				-layer.width/6,-layer.width/6);
+				-layer.width/6,-layer.width/6,gl);
 	}
-	private void paintShape16(int position,int inc,int range){}
+	private void paintShape16(int position,int inc,int range,GL2 gl){}
 
 	/*
 	private void tri(int position, int x1,int y1,int x2,int y2,int x3,int y3){
@@ -473,7 +470,7 @@ public class NineBlockPatternDrawer{
 	
 	
 */
-	private void tri(int inc, int range,int position, int x1,int y1,int x2,int y2,int x3,int y3){
+	private void tri(int inc, int range,int position, int x1,int y1,int x2,int y2,int x3,int y3,GL2 gl){
 		float ratio=1; 
 		gl.glBegin(GL2.GL_TRIANGLES);
 		ratio=gradients[0]*layer.gradient.v();
@@ -507,7 +504,7 @@ public class NineBlockPatternDrawer{
 		gl.glEnd();
 	}
 
-	private void quadri(int inc, int range,int position,int x1, int y1,int x2,int y2,int x3,int y3,int x4,int y4){
+	private void quadri(int inc, int range,int position,int x1, int y1,int x2,int y2,int x3,int y3,int x4,int y4,GL2 gl){
 		float ratio=1; 
 		gl.glBegin(GL2.GL_QUADS);
 		ratio=gradients[0]*layer.gradient.v(); 

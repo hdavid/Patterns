@@ -5,8 +5,6 @@ import controlP5.Tab;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.opengl.PJOGL;
-import processing.opengl.PGraphicsOpenGL;
 
 public class LayerTexture extends LayerMovement {
 
@@ -23,24 +21,24 @@ public class LayerTexture extends LayerMovement {
 	     setParameterMap();
 	}
 
-	public void set(PGraphicsOpenGL pgl){
+	public void set(GL2 gl){
 		texture = parent.loadImage("VK.gif");
 		texture.mask(parent.loadImage("VK.gif"));
 	}
 
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl) {
+	public void draw(GL2 gl) {
 		//transform
-		PJOGL.gl.getGL2().glPushMatrix();
-		PJOGL.gl.getGL2().glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
-		PJOGL.gl.getGL2().glScalef(zoom.v(),zoom.v(),0);
-		PJOGL.gl.getGL2().glRotatef(angle.v()/(2*(float)Math.PI)*360,0,0,1);
-		//PJOGL.gl.getGL2().glTranslatef(-width/2,-Config.HEIGHT/2,0);  
-		PJOGL.gl.getGL2().glTranslatef(scrollX.v(),scrollY.v(),0);
+		gl.glPushMatrix();
+		gl.glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
+		gl.glScalef(zoom.v(),zoom.v(),0);
+		gl.glRotatef(angle.v()/(2*(float)Math.PI)*360,0,0,1);
+		//gl.glTranslatef(-width/2,-Config.HEIGHT/2,0);  
+		gl.glTranslatef(scrollX.v(),scrollY.v(),0);
 
 		fillAll();
-		PJOGL.gl.getGL2().glPopMatrix();
+		gl.glPopMatrix();
 
 	}
 
@@ -79,7 +77,7 @@ public class LayerTexture extends LayerMovement {
 	}
 
 	private void paint(float x,float y){
-		//PJOGL.gl.getGL2().glPushMatrix();
+		//gl.glPushMatrix();
 		parent.translate(x,y);  
 		if(texture!=null ) {
 			parent.beginShape(PApplet.QUADS);
@@ -101,82 +99,82 @@ public class LayerTexture extends LayerMovement {
 
 
 	@SuppressWarnings("unused")
-	private void tri( int x1,int y1,int x2,int y2,int x3,int y3){
+	private void tri( int x1,int y1,int x2,int y2,int x3,int y3,GL2 gl){
 		float ratio=1; 
-		PJOGL.gl.getGL2().getGL2().glBegin(GL2.GL_TRIANGLES);
+		gl.glBegin(GL2.GL_TRIANGLES);
 		ratio=gradients[0]*gradient.v();
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*foregroundR/255f +(ratio)*backgroundR/255f 
 				,    (1-ratio)*foregroundG/255f +(ratio)*backgroundG/255f,
 				(1-ratio)*foregroundB/255f +(ratio)*backgroundB/255f
 				,fgAlpha.v()
 				);
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x1,y1);
+		gl.glVertex2f(x1,y1);
 
 		ratio=gradients[1]*gradient.v();
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*(foregroundR)/255.0f +(ratio)*(backgroundR)/255.0f 
 				,    (1-ratio)*(foregroundG)/255.0f +(ratio)*(backgroundG)/255.0f ,
 				(1-ratio)*(foregroundB)/255.0f +(ratio)*(backgroundB)/255.0f
 				,fgAlpha.v()
 				);       
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x2,y2);
+		gl.glVertex2f(x2,y2);
 
 		ratio=gradients[2]*gradient.v(); 
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*(foregroundR)/255.0f +(ratio)*(backgroundR)/255.0f 
 				,    (1-ratio)*(foregroundG)/255.0f +(ratio)*(backgroundG)/255.0f ,
 				(1-ratio)*(foregroundB)/255.0f +(ratio)*(backgroundB)/255.0f
 				,fgAlpha.v()
 				);       
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x3,y3);
+		gl.glVertex2f(x3,y3);
 
-		PJOGL.gl.getGL2().getGL2().glEnd();
+		gl.glEnd();
 	}
 
 	@SuppressWarnings("unused")
-	private void quadri(float x1, float y1,float x2,float y2,float x3,float y3,float x4,float y4){
+	private void quadri(float x1, float y1,float x2,float y2,float x3,float y3,float x4,float y4,GL2 gl){
 		float ratio=1;
 
-		PJOGL.gl.getGL2().getGL2().glBegin(GL2.GL_QUADS);
+		gl.glBegin(GL2.GL_QUADS);
 		//parent.texture(parent.textures[1]);
 
 		ratio=gradients[0]*gradient.v(); 
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*(foregroundR)/255.0f +(ratio)*(backgroundR)/255.0f 
 				,    (1-ratio)*(foregroundG)/255.0f +(ratio)*(backgroundG)/255.0f ,
 				(1-ratio)*(foregroundB)/255.0f +(ratio)*(backgroundB)/255.0f
 				,fgAlpha.v()
 				);
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x1,y1);
+		gl.glVertex2f(x1,y1);
 
 		ratio=gradients[1]*gradient.v(); 
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*(foregroundR)/255.0f +(ratio)*(backgroundR)/255.0f 
 				,    (1-ratio)*(foregroundG)/255.0f +(ratio)*(backgroundG)/255.0f ,
 				(1-ratio)*(foregroundB)/255.0f +(ratio)*(backgroundB)/255.0f
 				,fgAlpha.v()
 				);       
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x2,y2);
+		gl.glVertex2f(x2,y2);
 
 		ratio=gradients[2]*gradient.v(); 
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*(foregroundR)/255.0f +(ratio)*(backgroundR)/255.0f 
 				,    (1-ratio)*(foregroundG)/255.0f +(ratio)*(backgroundG)/255.0f ,
 				(1-ratio)*(foregroundB)/255.0f +(ratio)*(backgroundB)/255.0f
 				,fgAlpha.v()
 				);       
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x3,y3);
+		gl.glVertex2f(x3,y3);
 
 		ratio=gradients[3]*gradient.v(); 
-		PJOGL.gl.getGL2().glColor4f(
+		gl.glColor4f(
 				(1-ratio)*(foregroundR)/255.0f +(ratio)*(backgroundR)/255.0f 
 				,    (1-ratio)*(foregroundG)/255.0f +(ratio)*(backgroundG)/255.0f ,
 				(1-ratio)*(foregroundB)/255.0f +(ratio)*(backgroundB)/255.0f
 				,fgAlpha.v()
 				);       
-		PJOGL.gl.getGL2().getGL2().glVertex2f(x4,y4);
-		PJOGL.gl.getGL2().getGL2().glEnd(); 
+		gl.glVertex2f(x4,y4);
+		gl.glEnd(); 
 	}
 
 	@Override
@@ -189,7 +187,7 @@ public class LayerTexture extends LayerMovement {
 
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl) {
+	public void drawBackground(GL2 gl) {
 
 	}
 

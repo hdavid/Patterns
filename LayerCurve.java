@@ -4,9 +4,7 @@ import java.util.List;
 
 import javax.media.opengl.GL2;
 
-import processing.opengl.PJOGL;
 import processing.core.PApplet;
-import processing.opengl.PGraphicsOpenGL;
 import toxi.geom.Spline2D;
 import toxi.geom.Vec2D;
 import controlP5.Group;
@@ -60,9 +58,9 @@ public class LayerCurve extends LayerColor {
 
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl){
+	public void draw(GL2 gl){
 
-		GL2 gl = PJOGL.gl.getGL2().getGL2();
+		//GL2 glGL2 gl = PJOGL.gl;
 
 		int number = (int)this.number.v();
 
@@ -215,7 +213,7 @@ public class LayerCurve extends LayerColor {
 				if(!negative){		
 					gl.glColor4f(foregroundR/255f,foregroundG/255f,foregroundB/255f,fgAlpha.v());
 					if(carrier==0){
-						gl.getGL2().glVertex2f(0,0);
+						gl.glVertex2f(0,0);
 						gl.glColor4f(
 								backgroundR/255f*g + foregroundR/255f*ag
 								,backgroundG/255f*g + foregroundG/255f*ag
@@ -255,10 +253,10 @@ public class LayerCurve extends LayerColor {
 									,backgroundB/255f*g + foregroundB/255f*ag
 									,fgAlpha.v()
 									);
-							gl.getGL2().glVertex2f(p.x,p.y);
+							gl.glVertex2f(p.x,p.y);
 							Vec2D p2 = p.normalizeTo(radius*extraRadius);
 							gl.glColor4f(foregroundR/255f,foregroundG/255f,foregroundB/255f,fgAlpha.v());
-							gl.getGL2().glVertex2f(p2.x,p2.y);
+							gl.glVertex2f(p2.x,p2.y);
 						}else{
 							gl.glColor4f(
 									backgroundR/255f*g + foregroundR/255f*ag
@@ -266,13 +264,13 @@ public class LayerCurve extends LayerColor {
 									,backgroundB/255f*g + foregroundB/255f*ag
 									,fgAlpha.v()
 									);
-							gl.getGL2().glVertex2f(p.x,p.y);
+							gl.glVertex2f(p.x,p.y);
 							gl.glColor4f(foregroundR/255f,foregroundG/255f,foregroundB/255f,fgAlpha.v());
-							gl.getGL2().glVertex2f(p.x,radius*extraRadius);
+							gl.glVertex2f(p.x,radius*extraRadius);
 						}
 					}else{
 						if(carrier==0){
-							gl.getGL2().glVertex2f(p.x,p.y);
+							gl.glVertex2f(p.x,p.y);
 						}else{
 							gl.glColor4f(
 									backgroundR/255f*g + foregroundR/255f*ag
@@ -280,9 +278,9 @@ public class LayerCurve extends LayerColor {
 									,backgroundB/255f*g + foregroundB/255f*ag
 									,fgAlpha.v()
 									);
-							gl.getGL2().glVertex2f(p.x,p.y);
+							gl.glVertex2f(p.x,p.y);
 							gl.glColor4f(foregroundR/255f,foregroundG/255f,foregroundB/255f,fgAlpha.v());
-							gl.getGL2().glVertex2f(p.x,0);
+							gl.glVertex2f(p.x,0);
 						}
 					}
 					c++;	
@@ -290,27 +288,27 @@ public class LayerCurve extends LayerColor {
 
 				//Last triangle
 				if(carrier==0){
-					gl.getGL2().glVertex2f(firstX,firstY);
+					gl.glVertex2f(firstX,firstY);
 				}else{
 
 				}
 
-				gl.getGL2().glEnd();
+				gl.glEnd();
 			}
 			gl.glPopMatrix();
 		}
 	}
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl){
-		GL2 gl = PJOGL.gl.getGL2().getGL2();
+	public void drawBackground(GL2 gl){
+		//GL2 gl = PJOGL.gl;
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f, bgAlpha.v());
-		gl.getGL2().glBegin(GL2.GL_QUADS);
-		gl.getGL2().glVertex2f(0f,0f);
-		gl.getGL2().glVertex2f(Config.WIDTH,0f);
-		gl.getGL2().glVertex2f(Config.WIDTH,Config.HEIGHT);
-		gl.getGL2().glVertex2f(0f,Config.HEIGHT);
-		gl.getGL2().glEnd();
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2f(0f,0f);
+		gl.glVertex2f(Config.WIDTH,0f);
+		gl.glVertex2f(Config.WIDTH,Config.HEIGHT);
+		gl.glVertex2f(0f,Config.HEIGHT);
+		gl.glEnd();
 	}
 
 	@Override

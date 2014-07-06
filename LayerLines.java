@@ -8,8 +8,6 @@ import javax.media.opengl.GL2;
 
 import controlP5.Group;
 import controlP5.Tab;
-import processing.opengl.PJOGL;
-import processing.opengl.PGraphicsOpenGL;
 
 public class LayerLines extends LayerColor {
 
@@ -48,10 +46,10 @@ public class LayerLines extends LayerColor {
 	}
 
 	@Override
-	public void draw(PGraphicsOpenGL pgl){
+	public void draw(GL2 gl){
 
 		//transform
-		GL2 gl = PJOGL.gl.getGL2();
+		//GL2 gl = PJOGL.gl;
 		gl.glPushMatrix();
 		gl.glTranslatef(Config.WIDTH/2,Config.HEIGHT/2,0);
 
@@ -77,7 +75,7 @@ public class LayerLines extends LayerColor {
 			x+=line.space;
 
 		}
-		PJOGL.gl.getGL2().glPopMatrix();
+		gl.glPopMatrix();
 		//System.out.println(x);
 	}
 
@@ -200,16 +198,16 @@ public class LayerLines extends LayerColor {
 	}
 	
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl){
+	public void drawBackground(GL2 gl){
 		HSBtoRGB();
-		GL2 gl = PJOGL.gl.getGL2().getGL2();
+		//GL2 gl = PJOGL.gl;
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f, bgAlpha.v());
-		gl.getGL2().glBegin(GL2.GL_QUADS);
-		gl.getGL2().glVertex2f(0f,0f);
-		gl.getGL2().glVertex2f(Config.WIDTH,0f);
-		gl.getGL2().glVertex2f(Config.WIDTH,Config.HEIGHT);
-		gl.getGL2().glVertex2f(0f,Config.HEIGHT);
-		gl.getGL2().glEnd();
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2f(0f,0f);
+		gl.glVertex2f(Config.WIDTH,0f);
+		gl.glVertex2f(Config.WIDTH,Config.HEIGHT);
+		gl.glVertex2f(0f,Config.HEIGHT);
+		gl.glEnd();
 	}
 
 	@Override

@@ -7,9 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.media.opengl.GL2;
+
 import controlP5.Group;
 import controlP5.Tab;
-import processing.opengl.PGraphicsOpenGL;
 
 
 /**
@@ -20,8 +21,8 @@ public abstract class Layer {
 	
 	
 	abstract public int buildUI(GUIController controller,int x, int y, Tab tab, Group group);
-	abstract public void draw(PGraphicsOpenGL pgl);
-	abstract public void drawBackground(PGraphicsOpenGL pgl);
+	abstract public void draw(GL2 gl);
+	abstract public void drawBackground(GL2 gl);
 	abstract public void keyEvent(int key, int keyCode, char ch, boolean alt, boolean ctrl, boolean shift,boolean win,boolean apple,long[] lastPressedTimes);
 	
 	final protected Application parent;

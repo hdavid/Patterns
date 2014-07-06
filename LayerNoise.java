@@ -9,8 +9,6 @@ import javax.media.opengl.GL2;
 import controlP5.Group;
 import controlP5.Tab;
 
-import processing.opengl.PJOGL;
-import processing.opengl.PGraphicsOpenGL;
 import toxi.math.noise.PerlinNoise;
 import toxi.math.noise.SimplexNoise;
 
@@ -99,7 +97,7 @@ public class LayerNoise extends LayerColor {
 	long startTime = System.currentTimeMillis();
 	
 	@Override
-	public void draw(PGraphicsOpenGL pgl){
+	public void draw(GL2 gl){
 
 		int numPoints = (int)number.v();
 
@@ -253,36 +251,34 @@ public class LayerNoise extends LayerColor {
 		vbuffer.rewind();
 		cbuffer.rewind();
 		
-		GL2 gl2 = PJOGL.gl.getGL2();
-		
 		//draw
 		float size = this.size.v();
 		if(size>=1f){
 			//use buffers
-			gl2.glEnableClientState(GL2.GL_VERTEX_ARRAY);
-			gl2.glVertexPointer(2, GL2.GL_FLOAT, 0, vbuffer);
-			gl2.glEnableClientState(GL2.GL_COLOR_ARRAY);
-			gl2.glColorPointer(4, GL2.GL_FLOAT, 0, cbuffer);
+			gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+			gl.glVertexPointer(2, GL2.GL_FLOAT, 0, vbuffer);
+			gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
+			gl.glColorPointer(4, GL2.GL_FLOAT, 0, cbuffer);
 			//size
-			gl2.glPointSize(size);
-			gl2.glLineWidth(size);
+			gl.glPointSize(size);
+			gl.glLineWidth(size);
 			//shapes
 			if(shape==1){
-				gl2.glDrawArrays(GL2.GL_POINTS, 0, adaptedNumber);			
+				gl.glDrawArrays(GL2.GL_POINTS, 0, adaptedNumber);			
 			}
 			if(shape==2){
-				gl2.glDrawArrays(GL2.GL_LINES, 0, (continous && adaptedNumber>0)?adaptedNumber*2+1:adaptedNumber);			
+				gl.glDrawArrays(GL2.GL_LINES, 0, (continous && adaptedNumber>0)?adaptedNumber*2+1:adaptedNumber);			
 			}
 			if(shape==3){
-				gl2.glDrawArrays(GL2.GL_TRIANGLES, 0, adaptedNumber);			
+				gl.glDrawArrays(GL2.GL_TRIANGLES, 0, adaptedNumber);			
 			}	
 			if(shape==4){
-				gl2.glDrawArrays(GL2.GL_QUADS, 0, adaptedNumber);			
+				gl.glDrawArrays(GL2.GL_QUADS, 0, adaptedNumber);			
 			}	
 		}
-		//gl2.glPopMatrix();
-		gl2.glDisableClientState(GL2.GL_VERTEX_ARRAY);
-		gl2.glDisableClientState(GL2.GL_COLOR_ARRAY);
+		//gl.glPopMatrix();
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
 
 	}
 
@@ -313,10 +309,10 @@ public class LayerNoise extends LayerColor {
 
 
 	@Override
-	public void drawBackground(PGraphicsOpenGL pgl) {
+	public void drawBackground(GL2 gl) {
 		HSBtoRGB();
 		HSBtoRGB();
-		GL2 gl = PJOGL.gl.getGL2().getGL2();
+		//GL2 gl = PJOGL.gl.getGL2().getGL2();
 		gl.glColor4f( backgroundR/255f, backgroundG/255f, backgroundB/255f,bgAlpha.v());
 		gl.getGL2().glBegin(GL2.GL_QUADS);
 		gl.getGL2().glVertex2f(0f,0f);

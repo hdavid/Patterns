@@ -13,6 +13,7 @@ import java.util.List;
 import javax.media.opengl.GL2;
 
 import processing.core.PApplet;
+import processing.opengl.PGL;
 import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 import oscP5.OscMessage;
@@ -55,8 +56,9 @@ public class Application extends PApplet {
 
 	//OpenGL stuff
 	protected GLTextureWindow previewWindow;
-	protected PGraphicsOpenGL pgl;
+	protected PGL pgl;
 	protected PGraphicsOpenGL offScreenPgl;
+	protected GL2 gl;
 	protected SyphonServer syphonServer;
 	protected ShaderRenderer shaderRenderer;
 
@@ -260,13 +262,12 @@ public class Application extends PApplet {
 
 		//start openGL
 		if(Config.OFFSCREEN){
-			offScreenPgl.beginDraw();
-			pgl = offScreenPgl;
+			pgl = offScreenPgl.beginPGL();
 		}else{
-			pgl = (PGraphicsOpenGL) g;
+			pgl = beginPGL();
 		}
-		GL2 gl = PJOGL.gl.getGL2();
-
+		gl = ((PJOGL)beginPGL()).gl.getGL2();
+		
 		// set vertical sync on
 		if(Config.VERTICAL_SYNC){
 			gl.setSwapInterval(1);
@@ -317,7 +318,7 @@ public class Application extends PApplet {
 			this.image(offScreenPgl,0,0);
 			//preview window
 			if(Config.PREVIEW && previewWindow!=null){
-				if(previewWindow.init()){
+				if(previewWindow.init(gl)){
 					previewWindow.show();
 				}
 				previewWindow.setTexture(((PGraphicsOpenGL) g).getTexture());
@@ -354,7 +355,7 @@ public class Application extends PApplet {
 					layer.update();
 					//draw main background
 					if (i == 0){
-						layer.drawBackground(pgl);
+						layer.drawBackground(gl);
 					}
 				}
 
@@ -366,10 +367,10 @@ public class Application extends PApplet {
 
 					if(layer!=null){
 						if (i != 0){
-							layer.drawBackground(pgl);
+							layer.drawBackground(gl);
 						}
 
-						layer.draw(pgl);
+						layer.draw(gl);
 					}
 				}
 			}catch(Exception e){

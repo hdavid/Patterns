@@ -1,13 +1,11 @@
 
 
 import processing.core.PApplet;
-import processing.opengl.PJOGL;
 import processing.opengl.PGraphicsOpenGL;
 import processing.opengl.Texture;
 
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
-
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -115,11 +113,11 @@ public class GLTextureWindow {
     //pgl.pgl.addWindow(this);
   }
   
-  public boolean init() {
+  public boolean init(GL2 gl) {
     if (!initialized) {
       // The GL canvas of the AWT window must have exactly the same GL capabilities
       // as the main renderer for sharing with the main context to be possible.      
-      context = PJOGL.gl.getGL2().getContext(); 
+      context = gl.getContext(); 
       //caps = PJOGL.pgl.gl.getGL().
       
       initImpl(x0, y0, width, height);   
@@ -131,13 +129,13 @@ public class GLTextureWindow {
       initialized = true; 
       return(true);
       
-    } else if (context != PJOGL.gl.getContext()) {
+    } else if (context != gl.getContext()) {
       // The window has been initialized, but the main context in the      
       // renderer has changed. The frame, canvas, and renderer are
       // recreated.
       
       // Getting current context and capabilities of the main renderer.
-      context = PJOGL.gl.getContext();  
+      context = gl.getContext();  
       //caps = PJOGL.pgl.gl.capabilities;
       
       // Getting current parameters of the frame.
@@ -158,7 +156,8 @@ public class GLTextureWindow {
   }
 
   
-  protected void initImpl(int x, int y, int w, int h) {
+  @SuppressWarnings("deprecation")
+protected void initImpl(int x, int y, int w, int h) {
     frame = new Frame(name);
     frame.setSize(w, h);
     frame.setLocation(x, y);
